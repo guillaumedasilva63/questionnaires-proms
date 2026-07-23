@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Questionnaires PROMs SF-12 et Oxford hanche/genou, calculés localement dans le navigateur.">
+  <title>Questionnaires PROMs</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Évaluation fonctionnelle</p>
+        <h1>Questionnaires PROMs</h1>
+        <p class="subtitle">SF‑12 + score Oxford hanche ou genou</p>
+      </div>
+      <span class="privacy-badge">Calcul local · aucune donnée envoyée</span>
+    </header>
+
+    <noscript>
+      <div class="alert error">JavaScript doit être activé pour calculer les scores.</div>
+    </noscript>
+
+    <section id="start-screen" class="card screen" aria-labelledby="start-title">
+      <h2 id="start-title">Démarrer une évaluation</h2>
+      <div class="notice">
+        <strong>Prototype technique.</strong> Les libellés sont volontairement abrégés/paraphrasés. Avant un usage clinique ou de recherche, remplacez-les par les versions françaises validées et autorisées.
+      </div>
+
+      <label class="field-label" for="patient-id">Identifiant patient / étude</label>
+      <input id="patient-id" class="text-input" type="text" maxlength="80" autocomplete="off" placeholder="Ex. THA-001" required>
+
+      <fieldset class="joint-choice">
+        <legend>Quelle articulation évaluer&nbsp;?</legend>
+        <label class="choice-card">
+          <input type="radio" name="joint" value="knee">
+          <span class="choice-icon" aria-hidden="true">G</span>
+          <span><strong>Genou</strong><small>SF‑12 + Oxford Knee Score</small></span>
+        </label>
+        <label class="choice-card">
+          <input type="radio" name="joint" value="hip">
+          <span class="choice-icon" aria-hidden="true">H</span>
+          <span><strong>Hanche</strong><small>SF‑12 + Oxford Hip Score</small></span>
+        </label>
+      </fieldset>
+
+      <p id="start-error" class="form-error" role="alert" hidden></p>
+      <button id="start-button" class="button primary" type="button">Commencer</button>
+    </section>
+
+    <section id="questionnaire-screen" class="screen" hidden aria-labelledby="questionnaire-title">
+      <div class="progress-card">
+        <div class="progress-meta">
+          <span id="progress-label">0 / 24 réponses</span>
+          <span id="current-id"></span>
+        </div>
+        <div class="progress-track" aria-hidden="true"><div id="progress-bar" class="progress-bar"></div></div>
+      </div>
+
+      <form id="questionnaire-form" novalidate>
+        <section class="card questionnaire-section" aria-labelledby="sf12-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Questionnaire 1</p>
+              <h2 id="sf12-title">SF‑12</h2>
+            </div>
+            <span class="score-range">12 questions · résultats PCS + MCS</span>
+          </div>
+          <p class="section-help">Répondez selon votre état au cours des quatre dernières semaines.</p>
+          <div id="sf12-container"></div>
+        </section>
+
+        <section class="card questionnaire-section" aria-labelledby="oxford-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Questionnaire 2</p>
+              <h2 id="oxford-title">Score Oxford</h2>
+            </div>
+            <span class="score-range">12 questions · score 12–60</span>
+          </div>
+          <p class="section-help">Répondez pour l’articulation sélectionnée, sur les quatre dernières semaines.</p>
+          <div id="oxford-container"></div>
+        </section>
+
+        <div id="submit-error" class="alert error" role="alert" hidden></div>
+        <div class="form-actions">
+          <button id="back-button" class="button secondary" type="button">Retour</button>
+          <button class="button primary" type="submit">Calculer les scores</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="results-screen" class="card screen" hidden aria-labelledby="results-title">
+      <div class="results-heading">
+        <div>
+          <p class="eyebrow">Résultats</p>
+          <h2 id="results-title">Évaluation terminée</h2>
+        </div>
+        <span id="result-timestamp" class="muted"></span>
+      </div>
+
+      <dl class="identity-summary">
+        <div><dt>ID</dt><dd id="result-id"></dd></div>
+        <div><dt>Articulation</dt><dd id="result-joint"></dd></div>
+      </dl>
+
+      <div class="score-grid">
+        <article class="score-card">
+          <span>SF‑12 physique</span>
+          <strong id="result-pcs">–</strong>
+          <small>PCS, score normé</small>
+        </article>
+        <article class="score-card">
+          <span>SF‑12 mental</span>
+          <strong id="result-mcs">–</strong>
+          <small>MCS, score normé</small>
+        </article>
+        <article class="score-card accent">
+          <span id="result-oxford-label">Oxford</span>
+          <strong><span id="result-oxford">–</span><em>/60</em></strong>
+          <small>12 = meilleur état · 60 = état le plus altéré</small>
+        </article>
+      </div>
+
+      <div class="notice compact">
+        Les scores sont calculés dans ce navigateur. Ils ne constituent pas une interprétation médicale et ne sont enregistrés nulle part.
+      </div>
+
+      <div class="result-actions">
+        <button id="copy-button" class="button secondary" type="button">Copier le résumé</button>
+        <button id="csv-button" class="button secondary" type="button">Télécharger le CSV</button>
+        <button id="print-button" class="button secondary" type="button">Imprimer</button>
+        <button id="restart-button" class="button primary" type="button">Nouvelle évaluation</button>
+      </div>
+      <p id="copy-status" class="copy-status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <footer class="page-footer">
+    <p>Application statique compatible GitHub Pages. Aucun serveur ni base de données.</p>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
