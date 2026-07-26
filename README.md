@@ -8,7 +8,7 @@ Site statique sans serveur, prêt à publier gratuitement sur GitHub Pages.
 - choix initial genou ou hanche ;
 - questionnaire SF-12 puis Oxford correspondant ;
 - calcul local du SF-12 PCS et MCS ;
-- calcul Oxford sur 12–60, 12 correspondant au meilleur état ;
+- calcul Oxford sur 0–48, 48 correspondant au meilleur état ;
 - résumé final avec ID ;
 - copie, impression et export CSV ;
 - aucune donnée transmise ou sauvegardée par le site.
@@ -24,8 +24,7 @@ Site statique sans serveur, prêt à publier gratuitement sur GitHub Pages.
 
 ## Vérification rapide
 
-- Toutes les meilleures réponses Oxford doivent produire `12/60`.
-- Toutes les réponses les plus défavorables doivent produire `60/60`.
+- Toutes les meilleures réponses Oxford doivent produire `48/48`.
 - Toutes les réponses SF-12 correspondant au meilleur état de chaque item produisent environ :
   - PCS `56.58`
   - MCS `60.76`
@@ -46,7 +45,7 @@ Avant un usage clinique, institutionnel ou de recherche :
 
 ### Oxford
 
-Chaque réponse est cotée de 1 à 5, de la meilleure à la plus mauvaise. Les 12 items sont additionnés : score total de 12 à 60. Un score bas correspond à un meilleur état fonctionnel.
+Chaque réponse est cotée de 4 à 0, de la meilleure à la plus mauvaise. Les 12 items sont additionnés : score total de 0 à 48.
 
 ### SF-12
 

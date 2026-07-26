@@ -8,7 +8,7 @@
   with the exact validated French versions for which you have obtained permission.
 
   Scoring implemented:
-  - Oxford Hip/Knee Score: 12 items, 1 to 5 per item, total 12–60 (lower is better).
+  - Oxford Hip/Knee Score: 12 items, 4 to 0 per item, total 0–48.
   - SF-12 v1 norm-based PCS/MCS algorithm (US reference constants).
 */
 
@@ -219,7 +219,7 @@ function renderQuestionnaires() {
       index,
       prompt,
       options,
-      scoreValues: [1, 2, 3, 4, 5]
+      scoreValues: [4, 3, 2, 1, 0]
     }));
   });
 
@@ -330,7 +330,7 @@ function resultSummary() {
     `Articulation : ${jointLabel}`,
     `SF-12 PCS : ${result.pcs.toFixed(2)}`,
     `SF-12 MCS : ${result.mcs.toFixed(2)}`,
-    `${oxfordLabel} : ${result.oxford}/60`,
+    `${oxfordLabel} : ${result.oxford}/48`,
     `Date : ${result.date.toLocaleString('fr-FR')}`
   ].join('\n');
 }
@@ -342,7 +342,7 @@ function csvEscape(value) {
 function downloadCsv() {
   const result = state.result;
   const jointLabel = result.joint === 'hip' ? 'Hanche' : 'Genou';
-  const header = ['id', 'articulation', 'sf12_pcs', 'sf12_mcs', 'oxford_score_12_60', 'date_iso'];
+  const header = ['id', 'articulation', 'sf12_pcs', 'sf12_mcs', 'oxford_score_0_48', 'date_iso'];
   const row = [result.id, jointLabel, result.pcs.toFixed(2), result.mcs.toFixed(2), result.oxford, result.date.toISOString()];
   const csv = `\uFEFF${header.map(csvEscape).join(';')}\n${row.map(csvEscape).join(';')}\n`;
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
